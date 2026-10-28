@@ -1,0 +1,30 @@
+target_roles:
+  - "Data Analyst"
+  - "Machine Learning Engineer"
+  - "AI Engineer"
+  - "Data Scientist"
+  - "AI/ML Intern"
+
+experience_level:
+  min_years: 0
+  max_years: 1
+
+whitelist_terms:
+  - "0-1 years"
+  - "entry level"
+  - "entry-level"
+  - "fresher"
+  - "graduate"
+  - "junior"
+  - "intern"
+
+blacklist_terms:
+  - "3+ years"
+  - "4+ years"
+  - "5+ years"
+  - "senior"
+  - "lead"
+  - "principal"
+  - "staff"
+  - "manager"
+  - "director"
