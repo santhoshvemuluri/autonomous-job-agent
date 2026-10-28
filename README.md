@@ -4,27 +4,38 @@ An end-to-end, stateful agentic system built to automate the job application pro
 
 ---
 
-## 🏛️ System Architecture
+## 🏛️ System Architecture & Workflow
 
 The workflow is engineered as a stateful graph using **LangGraph**. Each stage operates as a specialized node that inspects, modifies, and passes an isolated state dictionary through the pipeline.
 
-```mermaid
-graph TD
-    A[Target Job / JD Input] --> B[Scout Filter Node]
-    B -- Non-Matching Role --> C[Exit / Skip]
-    B -- Role Approved --> D[Tailor Agent <br/> <i>Groq / Llama 3</i>]
-    
-    subgraph Refinement Loop
-        D --> E[ATS Evaluator <br/> <i>LLM-as-a-Judge</i>]
-        E -- Score < 90 --> D
-    end
+```text 
+[Target Job / JD]
+       │
+       ▼
+[Scout Filter Node] ────► [Rejected / Exit]
+       │ (Passed)
+       ▼
+ ┌──► [Tailor Agent (Llama 3)]
+ │     │
+ │     ▼
+ │   [ATS Evaluator (LLM-as-a-Judge)]
+ │     │
+ └─────┴──► (Score < 90: Retry Loop)
+       │
+       │ (Score ≥ 90)
+       ▼
+[Playwright Compiler]
+       │
+       ▼
+[Human-in-the-Loop Review]
+       │
+       ▼
+[Browser Applier (Gemini Vision)]
+       │
+       ▼
+[CSV Logger & Streamlit Dashboard]
 
-    E -- Score ≥ 90 --> F[Playwright Compiler]
-    F -- PDF Generated --> G[Human-in-the-Loop <br/> <i>Pre-Submit Review</i>]
-    G -- Approved --> H[Browser Applier <br/> <i>Gemini 1.5 Flash Vision</i>]
-    G -- Rejected --> C
-    H --> I[CSV Logger & Streamlit Dashboard]
-
+---
 ### Node Breakdown
 
 1. **Scout Filter Node:** Evaluates raw job descriptions against structured target criteria (e.g., fresher/entry-level keywords) before invoking heavy LLM processing, optimizing execution speed and API resource usage.
@@ -37,6 +48,7 @@ graph TD
 8. **Telemetry & Logging:** Formats execution results, ATS scores, and application timestamps into `data/applications_log.csv` for real-time tracking in the dashboard.
 
 ---
+```text
 
 ## ✨ Engineering Highlights
 
@@ -82,7 +94,10 @@ autonomous-job-agent/
 ├── .gitignore                    # Version control exclusions
 ├── requirements.txt              # Dependency specifications
 └── README.md                     # Project documentation
-🚀 Getting Started
+
+
+## 🚀 Getting Started
+
 1. Prerequisites
 Python 3.11 or higher
 
